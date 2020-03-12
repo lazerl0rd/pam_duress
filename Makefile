@@ -1,8 +1,8 @@
 SHELL := /bin/bash
-CC = gcc
+CC ?= gcc
 PREFIX ?= /usr
-CFLAGS = -fPIC -fno-stack-protector -c -I/usr/local/ssl/include -DHASH_ROUNDS=1000 -DDB_PATH='"$(PREFIX)/share/duress"'
-LDFLAGS = -L/usr/local/ssl/lib -lcrypto
+CFLAGS += -fPIC -fno-stack-protector -c -I/usr/local/ssl/include -DHASH_ROUNDS=1000 -DDB_PATH='"$(PREFIX)/share/duress"'
+LDFLAGS += -L/usr/local/ssl/lib -lcrypto
 TARGET = $(DESTDIR)$(PREFIX)
 
 .PHONY: clean install remove
