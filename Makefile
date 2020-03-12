@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 CC ?= gcc
-PREFIX ?= /usr
+PREFIX := /usr
 CFLAGS += -fPIC -fno-stack-protector -c -I/usr/local/ssl/include -DHASH_ROUNDS=1000 -DDB_PATH='"$(PREFIX)/share/duress"'
 LDFLAGS += -L/usr/local/ssl/lib -lcrypto
 TARGET = $(DESTDIR)$(PREFIX)
@@ -9,23 +9,19 @@ TARGET = $(DESTDIR)$(PREFIX)
 
 all: adduser deluser pam_duress
 
-pam_duress: pam_duress.c
+pam_duress:
 	$(CC) $(CFLAGS) pam_duress.c
 	$(CC) -shared pam_duress.o $(LDFLAGS) -o pam_duress.so
 
-adduser.o: adduser.c
+adduser:
 	$(CC) $(CFLAGS) adduser.c
-
-adduser: adduser.o
 	$(CC) adduser.o $(LDFLAGS) -o adduser
 
-deluser.o: deluser.c
+deluser:
 	$(CC) $(CFLAGS) deluser.c
-
-deluser: deluser.o
 	$(CC) deluser.o $(LDFLAGS) -o deluser
 
-install: pam_duress adduser deluser
+install:
 	if [ -e "$(TARGET)/lib/x86_64-linux-gnu/security" ]; then \
 		install -m 744 pam_duress.so $(TARGET)/lib/x86_64-linux-gnu/security/pam_duress.so; \
 	else \
@@ -58,4 +54,4 @@ remove:
 	rm -vr $(TARGET)/share/duress
 
 clean:
-	rm -v pam_duress.o pam_duress.so adduser.o adduser deluser.o deluser
+	rm -fv pam_duress.o pam_duress.so adduser.o adduser deluser.o deluser
